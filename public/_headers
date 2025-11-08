@@ -1,0 +1,34 @@
+# Security Headers for MS2025 Site Generator
+# Applied by Cloudflare Pages
+# See: https://developers.cloudflare.com/pages/platform/headers/
+
+# Apply to all routes
+/*
+  # Content Security Policy
+  # Note: Relaxed for development; tighten for production based on actual resource origins
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.clarity.ms; style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://www.google-analytics.com https://www.clarity.ms; frame-ancestors 'self'; base-uri 'self'; form-action 'self'
+
+  # Prevent MIME type sniffing
+  X-Content-Type-Options: nosniff
+
+  # Enable XSS protection (legacy browsers)
+  X-XSS-Protection: 1; mode=block
+
+  # Control iframe embedding
+  X-Frame-Options: SAMEORIGIN
+
+  # Referrer Policy - send origin only for cross-origin requests
+  Referrer-Policy: strict-origin-when-cross-origin
+
+  # Permissions Policy - restrict access to browser features
+  Permissions-Policy: accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()
+
+  # Strict Transport Security (HSTS) - force HTTPS
+  # Note: Cloudflare handles this automatically for custom domains
+  Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+
+  # Additional security headers
+  X-Permitted-Cross-Domain-Policies: none
+  Cross-Origin-Embedder-Policy: require-corp
+  Cross-Origin-Opener-Policy: same-origin
+  Cross-Origin-Resource-Policy: same-origin
