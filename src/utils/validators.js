@@ -67,12 +67,13 @@ export function validateStep(step, formData) {
       }
       break;
       
-    case 3:
+    case 3: {
       const validServices = formData.services.filter(s => s.name.trim());
       if (validServices.length === 0) {
         errors.services = 'Debes agregar al menos un servicio';
       }
       break;
+    }
       
     case 4:
       if (!validatePhone(formData.whatsapp)) {

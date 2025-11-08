@@ -61,9 +61,9 @@ function App() {
     const newErrors = {};
     
     if (step === 1) {
-      if (!formData.businessName.trim()) newErrors.businessName = 'El nombre del negocio es requerido';
-      if (!formData.industry) newErrors.industry = 'Selecciona un rubro';
-      if (!formData.slogan.trim()) newErrors.slogan = 'El slogan es requerido';
+      if (!formData.businessName.trim()) {newErrors.businessName = 'El nombre del negocio es requerido';}
+      if (!formData.industry) {newErrors.industry = 'Selecciona un rubro';}
+      if (!formData.slogan.trim()) {newErrors.slogan = 'El slogan es requerido';}
       if (formData.shortDescription.split(' ').filter(w => w).length < 50) {
         newErrors.shortDescription = 'La descripción corta debe tener al menos 50 palabras';
       }
@@ -79,13 +79,13 @@ function App() {
     }
     
     if (step === 4) {
-      if (!formData.whatsapp.trim()) newErrors.whatsapp = 'El WhatsApp es requerido';
-      if (!formData.phone.trim()) newErrors.phone = 'El teléfono es requerido';
-      if (!formData.email.trim()) newErrors.email = 'El email es requerido';
+      if (!formData.whatsapp.trim()) {newErrors.whatsapp = 'El WhatsApp es requerido';}
+      if (!formData.phone.trim()) {newErrors.phone = 'El teléfono es requerido';}
+      if (!formData.email.trim()) {newErrors.email = 'El email es requerido';}
       else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
         newErrors.email = 'Email inválido';
       }
-      if (!formData.address.trim()) newErrors.address = 'La dirección es requerida';
+      if (!formData.address.trim()) {newErrors.address = 'La dirección es requerida';}
     }
     
     return newErrors;
