@@ -32,3 +32,11 @@ yarn-error.log*
 # Cloudflare
 .wrangler/
 .dev.vars
+
+# Archives (except docs/artifacts)
+*.zip
+!docs/artifacts/*.zip
+
+# Temporary files
+*.tmp
+*.temp

@@ -32,7 +32,7 @@ export function generateScheduleHTML(schedule) {
 }
 
 export function generateGalleryHTML(images) {
-  if (!images || images.length === 0) return '';
+  if (!images || images.length === 0) {return '';}
   return images.map((img, i) => `
     <div class="gallery-item">
       <img src="${img}" alt="Galería ${i + 1}" loading="lazy" />

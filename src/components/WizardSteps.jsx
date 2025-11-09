@@ -1,5 +1,5 @@
 // StepBranding.jsx
-export function StepBranding({ formData, errors, onChange }) {
+export function StepBranding({ formData, errors: _errors, onChange }) {
   return (
     <div className="card space-y-6">
       <h2 className="text-2xl font-bold text-gray-900 mb-4">Paso 2: Branding e Identidad Visual</h2>
@@ -298,7 +298,7 @@ export function StepContact({ formData, errors, onChange }) {
 }
 
 // StepFeatures.jsx
-export function StepFeatures({ formData, errors, onChange }) {
+export function StepFeatures({ formData, errors: _errors, onChange }) {
   return (
     <div className="card space-y-6">
       <h2 className="text-2xl font-bold text-gray-900 mb-4">Paso 5: Características Opcionales</h2>

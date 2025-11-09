@@ -1,3 +1,17 @@
 name = "ms2025-generator"
 pages_build_output_dir = "dist"
 compatibility_date = "2024-11-01"
+
+# Security headers for Cloudflare Pages
+# Note: These are applied via _headers file for Pages deployments
+# See: https://developers.cloudflare.com/pages/platform/headers/
+
+[build]
+command = "npm run build"
+cwd = "."
+
+# For Pages Functions (if used in the future)
+[env.production]
+# Security settings for production
+[env.staging]
+# Security settings for staging
