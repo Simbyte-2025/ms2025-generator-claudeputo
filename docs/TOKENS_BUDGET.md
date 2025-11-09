@@ -66,23 +66,26 @@ Minimizar el consumo de tokens de Manus durante operaciones, delegando trabajo p
    - docs/BUILD_MANIFEST.md
    - .github/README.md
 
-2. **Verificar estado del repo** (~500 tokens)
+2. **OPCIÓN SIMPLE: Ejecutar wrapper script** (~1K-2K tokens)
    ```bash
-   git status
-   npm run verify  # Ya configurado en package.json
-   npm run lint    # Debe pasar sin intervención
+   # Un solo comando - ejecuta todo el flujo determinista
+   ./scripts/manus-deploy.sh
    ```
 
-3. **Ejecutar deployment** (~1K tokens)
-   ```bash
-   # Opción A: Vía GitHub Actions (recomendado)
-   git push origin main
-   # Monitorear workflow en GitHub Actions UI
+   El script ejecuta automáticamente:
+   - ✅ npm run verify (versiones de Node/npm)
+   - ✅ npm run lint (calidad de código)
+   - ✅ npm run build (construir aplicación)
+   - ✅ Verificar artefactos (dist/index.html, dist/_headers, dist/assets/)
+   - ✅ Deploy (manual via wrangler o automático via CI)
 
-   # Opción B: Manual (solo si GitHub Actions falla)
-   npm ci
+3. **OPCIÓN ALTERNATIVA: Comandos individuales** (~2K-3K tokens)
+   ```bash
+   # Solo si el script wrapper falla o necesitas control granular
+   npm run verify
+   npm run lint
    npm run build
-   npm run deploy  # wrangler pages deploy dist
+   npm run deploy  # o git push origin main para CI/CD
    ```
 
 4. **Validaciones post-deploy** (~1K tokens)
@@ -92,6 +95,10 @@ Minimizar el consumo de tokens de Manus durante operaciones, delegando trabajo p
 
    # Verificar security headers
    curl -I https://ms2025-generator.pages.dev | grep -i content-security
+
+   # Verificar SEO files
+   curl -I https://ms2025-generator.pages.dev/robots.txt
+   curl -I https://ms2025-generator.pages.dev/sitemap.xml
 
    # Lighthouse (opcional, si hay tiempo)
    lighthouse <staging-url> --preset=desktop --quiet
@@ -170,35 +177,50 @@ Manus puede ejecutar `npm run <script>` sin necesidad de conocer detalles intern
 
 ---
 
-## Optimizaciones Adicionales
+## Optimizaciones Implementadas
 
-### Para reducir tokens de Manus aún más:
+### ✅ Optimizaciones ya aplicadas:
 
-1. **Wrapper Script para Manus**
-   Crear `scripts/manus-deploy.sh`:
+1. **✅ Wrapper Script para Manus** (IMPLEMENTADO)
+   Script: `scripts/manus-deploy.sh`
+
+   Características:
+   - 5 pasos deterministas con logging visual (colores)
+   - Manejo robusto de errores (set -e, set -u, set -o pipefail)
+   - Detección automática de CI vs local
+   - Validación de artefactos de build
+   - Exit codes apropiados para automatización
+
+   Uso:
    ```bash
-   #!/bin/bash
-   set -e
-   echo "🔍 Verificando estado..."
-   npm run verify
-   npm run lint
-   echo "🏗️  Building..."
-   npm run build
-   echo "🚀 Deploying..."
-   npm run deploy
-   echo "✅ Done!"
+   ./scripts/manus-deploy.sh
    ```
-   Manus solo ejecuta: `./scripts/manus-deploy.sh`
 
-2. **Template de Respuestas**
+   Output esperado:
+   ```
+   ℹ Step 1/5: Verifying environment...
+   ✓ Environment verified
+   ℹ Step 2/5: Linting code...
+   ✓ Linting passed
+   ℹ Step 3/5: Building application...
+   ✓ Build completed
+   ℹ Step 4/5: Verifying build artifacts...
+   ✓ Build artifacts verified
+   ℹ Step 5/5: Deploying...
+   ✓ Deployment completed
+   ```
+
+### 🔄 Optimizaciones futuras (opcional):
+
+2. **Template de Respuestas** (PENDIENTE)
    Crear `docs/MANUS_RESPONSES.md` con templates pre-escritos:
    - "Deployment exitoso"
    - "Deployment falló: [error]"
    - "Rollback ejecutado"
    Manus solo llena los blancos.
 
-3. **Integración con Rube/Composio (Futura)**
-   Si se integra herramienta de orquestación externa:
+3. **Integración con Rube/Composio** (PENDIENTE - NO IMPLEMENTAR EN ESTE REPO)
+   Si se integra herramienta de orquestación externa (fuera de este repo):
    ```javascript
    execute_rube_tool("deploy_cloudflare", {
      project: "ms2025-generator",
@@ -206,6 +228,9 @@ Manus puede ejecutar `npm run <script>` sin necesidad de conocer detalles intern
    })
    ```
    Reduce tokens a ~100-200 (solo llamada HTTP).
+
+   **NOTA:** Esta integración debe hacerse vía proxy HTTP externo,
+   NO añadir SDKs de terceros a este repositorio.
 
 ---
 
