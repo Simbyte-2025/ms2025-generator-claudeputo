@@ -1,0 +1,32 @@
+# MS2025 Site Generator - Robots.txt
+# https://github.com/Simbyte-2025/ms2025-generator-claudeputo
+
+# Allow all bots to crawl
+User-agent: *
+Allow: /
+
+# Disallow crawling of error pages
+Disallow: /404.html
+
+# Disallow crawling of build artifacts
+Disallow: /assets/
+
+# Sitemap location
+Sitemap: https://ms2025-generator.pages.dev/sitemap.xml
+
+# Crawl delay (optional - reduce server load)
+# Crawl-delay: 1
+
+# Specific bot rules (optional)
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+# Disallow bad bots (optional)
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /

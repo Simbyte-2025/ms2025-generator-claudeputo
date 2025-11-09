@@ -134,6 +134,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for secret scanning
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -148,7 +150,41 @@ jobs:
         run: npm audit --audit-level=moderate
         continue-on-error: true
 
-      - name: Check for secrets in code
+      - name: Scan for secrets with Gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }} # Optional: for premium features
+        continue-on-error: false  # Fail the build if secrets are found
+
+      - name: Check for hardcoded credentials (fallback)
         run: |
-          echo "Checking for exposed secrets..."
-          ! grep -r -i "api[_-]key\|secret\|password\|token" src/ --include="*.js" --include="*.jsx" || echo "⚠️  Potential secrets found (review manually)"
+          echo "🔍 Checking for potential hardcoded credentials..."
+
+          # Patterns to search for
+          PATTERNS=(
+            "api[_-]?key\s*[:=]"
+            "api[_-]?secret\s*[:=]"
+            "password\s*[:=]"
+            "token\s*[:=]"
+            "cf[_-]?api[_-]?token"
+            "cf[_-]?account[_-]?id"
+            "secret[_-]?key"
+            "private[_-]?key"
+            "access[_-]?token"
+          )
+
+          FOUND=0
+          for pattern in "${PATTERNS[@]}"; do
+            if grep -r -i -E "$pattern" src/ --include="*.js" --include="*.jsx" 2>/dev/null; then
+              echo "⚠️  Potential credential pattern found: $pattern"
+              FOUND=1
+            fi
+          done
+
+          if [ $FOUND -eq 1 ]; then
+            echo "❌ Potential secrets detected - please review manually"
+            echo "Note: This is a heuristic check. Review the matches above."
+          else
+            echo "✅ No obvious credential patterns found"
+          fi
